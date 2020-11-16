@@ -1,4 +1,8 @@
+var canvas = document.getElementById("scene");
+var ctx = canvas.getContext("2d");
 
+var currentDirection = "left";
+var pipeDirection = "right";
 
 var state = true; 
 
@@ -19,9 +23,60 @@ function randomDirection(){
     }
 }
 
-var direction = "none"
+var isPressed = {
+    right: "false",
+    left: "false",
+    up: "false",
+    down: "false"
+}
 
-alert("Dodge in the correct direction!")
+function keyUpHandler(e){
+    switch(e.keyCode){
+        case 39: isPressed.right = false; break;
+        case 37: isPressed.left = false; break;
+        case 38: isPressed.up = false; break;
+        case 40: isPressed.down = false; break;
+    }
+}
+
+function keyDownHandler(e){
+    switch(e.keyCode){
+        case 39: isPressed.right = true; break;
+        case 37: isPressed.left = true; break;
+        case 38: isPressed.up = true; break;
+        case 40: isPressed.down = true; break;
+    }
+}
+
+function updateDirection(){
+    if(isPressed.left){
+        currentDirection = "left"
+        
+    }
+    else if(isPressed.right){
+        currentDirection = "right"
+        
+    }
+    else if(isPressed.up){
+        currentDirection = "up"
+        
+    }
+    else if(isPressed.down){
+        currentDirection = "down"
+        
+    }
+}
+
+function drawPlayer(){
+    
+    switch(currentDirection){
+        case "left":  ctx.fillRect(30, canvas.height/2, 50, 50); break;
+        case "right":  ctx.fillRect(canvas.width - (30+50),canvas.height/2, 50, 50); break;
+        case "up":  ctx.fillRect(canvas.width/2,30, 50, 50); break;
+        case "down":  ctx.fillRect(canvas.width/2,canvas.height - 50, 50, 50); break;
+    }
+}
+
 
 //makes variable for the direction to be generated
 var direction = randomDirection();
@@ -37,19 +92,13 @@ function checkDirection(input){
 }
 
 
-do{
-    
-    //gives you the prompt, and uses .toLowerCase to sanitize the input, compares to direction var
-    var selectedDirection = prompt("You see a pipe " + direction + " of you coming your way!").toLowerCase() 
-    if(checkDirection(selectedDirection) && selectedDirection !== direction){
-        //generate a new direction and then loops
-        direction = randomDirection();
-    }else{
-        if(confirm("You lost, game over. continue?")){
-            continue; // continue the loop from beginning
-        }else{
-            state = false; // stop the loop, game over
-        }
-    }
+function main(){
+    ctx.clearRect(0,0,canvas.width, canvas.height)//clears screen
+    updateDirection() 
+    drawPlayer()
+    window.requestAnimationFrame(main)
+}
+main()
 
-}while(state)
+document.addEventListener("keydown", keyDownHandler)
+document.addEventListener("keyup", keyUpHandler)
