@@ -26,10 +26,22 @@ alert("Dodge in the correct direction!")
 //makes variable for the direction to be generated
 var direction = randomDirection();
  
+function checkDirection(input){
+    switch(input){
+        case "right": return true; break;
+        case "left": return true; break;
+        case "up": return true; break;
+        case "down": return true; break;
+        default: return false; break;
+    }
+}
+
+
 do{
     
     //gives you the prompt, and uses .toLowerCase to sanitize the input, compares to direction var
-    if(prompt("You see a pipe " + direction + " of you coming your way!").toLowerCase() === direction){
+    var selectedDirection = prompt("You see a pipe " + direction + " of you coming your way!").toLowerCase() 
+    if(checkDirection(selectedDirection) && selectedDirection !== direction){
         //generate a new direction and then loops
         direction = randomDirection();
     }else{
